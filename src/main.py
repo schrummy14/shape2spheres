@@ -16,7 +16,7 @@ if __name__ == "__main__":
         if len(stlFile) == 0:
             print("No File Selected...")
             exit()
-        stlScale = float(input("Scale for file"))
+        stlScale = float(input("Scale for file: "))
         minR = float(input("Min radius to use: "))
         numAtoms = int(input("Number of spheres to use in optimization: "))
 

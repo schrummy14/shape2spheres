@@ -1,4 +1,10 @@
+import os
 import numpy as np
+
+if os.name == 'nt':
+    import matplotlib
+    matplotlib.use("qt4agg")
+
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 
@@ -144,11 +150,14 @@ class sphereOptimization():
             (self.Bounds[3]-self.Bounds[2])*(self.Bounds[3]-self.Bounds[2]) + 
             (self.Bounds[5]-self.Bounds[4])*(self.Bounds[5]-self.Bounds[4]))
         mB = minBounds(np.reshape(mBL,4*self.numAtoms,1),np.reshape(mBH,4*self.numAtoms,1))
-        x0 = np.reshape(self.atoms,self.numAtoms*4)
+
+        bestRes = None
+        minF = np.inf
+
+
         res = differential_evolution(
             self.sphereFun,
             bounds=mB,
-            init='latinhypercube',
             disp=True,
             workers=1,
             popsize=35)
@@ -157,6 +166,9 @@ class sphereOptimization():
             self.atoms[k,1] = res.x[1*self.numAtoms+k]
             self.atoms[k,2] = res.x[2*self.numAtoms+k]
             self.atoms[k,3] = res.x[3*self.numAtoms+k]
+
+        print("Res:", res.fun)
+        print("Atoms:")
         print(self.atoms)
         self.plotResult()
 
@@ -171,8 +183,8 @@ class sphereOptimization():
             z = np.append(curTri[:,2],curTri[0,2])
             ax.plot(x,y,z)
 
-        u = np.linspace(0.0,2.0*np.pi,10)
-        v = np.linspace(0.0,np.pi,10)
+        u = np.linspace(0.0,2.0*np.pi,8)
+        v = np.linspace(0.0,np.pi,8)
         cosu = np.cos(u)
         sinu = np.sin(u)
         cosv = np.cos(v)
